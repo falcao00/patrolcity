@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patrol City</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <label class="avatar" title="Clique para trocar a foto">
+          <img id="avatar-img" alt="Foto do personagem" />
+          <span class="avatar-hint">Trocar foto</span>
+          <input id="avatar-input" type="file" accept="image/*" hidden />
+        </label>
+
+        <div class="identity">
+          <h2 id="char-name"></h2>
+          <span id="char-level" class="level"></span>
+        </div>
+
+        <div class="highlights">
+          <div class="highlight">
+            <span class="highlight-label">Reputação</span>
+            <span id="rep-value" class="highlight-value"></span>
+          </div>
+          <div class="highlight">
+            <span class="highlight-label">Dinheiro</span>
+            <span id="money-value" class="highlight-value money"></span>
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label"><span>Vida</span><span id="hp-value"></span></div>
+          <div class="bar"><div id="hp-fill" class="bar-fill hp"></div></div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label"><span>Energia</span><span id="energy-value"></span></div>
+          <div class="bar"><div id="energy-fill" class="bar-fill energy"></div></div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label"><span>Experiência</span><span id="xp-value"></span></div>
+          <div class="bar"><div id="xp-fill" class="bar-fill xp"></div></div>
+        </div>
+
+        <section class="attributes">
+          <h3>Status</h3>
+          <div class="attr-grid">
+            <div class="attr" title="Força">
+              <span class="attr-label">FOR</span>
+              <span id="attr-for" class="attr-value">0</span>
+            </div>
+            <div class="attr" title="Destreza">
+              <span class="attr-label">DES</span>
+              <span id="attr-des" class="attr-value">0</span>
+            </div>
+            <div class="attr" title="Constituição">
+              <span class="attr-label">CON</span>
+              <span id="attr-con" class="attr-value">0</span>
+            </div>
+            <div class="attr" title="Inteligência">
+              <span class="attr-label">INT</span>
+              <span id="attr-int" class="attr-value">0</span>
+            </div>
+            <div class="attr" title="Carisma">
+              <span class="attr-label">CAR</span>
+              <span id="attr-car" class="attr-value">0</span>
+            </div>
+            <div class="attr" title="Sorte">
+              <span class="attr-label">SOR</span>
+              <span id="attr-sor" class="attr-value">0</span>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <div class="content">
+        <nav class="top-menu">
+          <button type="button" class="menu-btn" data-scene="CityScene">CIDADE</button>
+          <button type="button" class="menu-btn" data-scene="TrainScene">TREINAR</button>
+          <button type="button" class="menu-btn" data-scene="FightScene">LUTA</button>
+          <button type="button" class="menu-btn" data-scene="ShopScene">LOJA</button>
+          <button type="button" class="menu-btn" data-scene="HospitalScene">HOSPITAL</button>
+          <button type="button" class="menu-btn" data-scene="InventoryScene">INVENTÁRIO</button>
+        </nav>
+
+        <main id="game"></main>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
