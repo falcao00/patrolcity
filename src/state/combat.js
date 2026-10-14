@@ -144,6 +144,17 @@ export const combat = {
     return () => listeners.delete(fn);
   },
 
+  // Persistência: vida e indisponibilidade de cada inimigo.
+  serialize: () => Object.fromEntries(enemyState),
+
+  restore(data) {
+    if (!data) return;
+    for (const [id, st] of Object.entries(data)) {
+      if (typeof st?.hp === 'number') enemyState.set(id, { hp: st.hp, downUntil: st.downUntil ?? null });
+    }
+    emit();
+  },
+
   // Retorna null se a luta começou, ou { message } com o motivo de não poder.
   start(enemy) {
     if (combat.isFighting()) return { message: 'Você já está em uma luta.' };

@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { player } from '../state/player.js';
 import { inventory } from '../state/inventory.js';
+import { deleteSave } from '../state/save.js';
 
 // Teclas de teste da tela inicial (fileira de números ou teclado numérico).
 const TEST_KEYS = [
@@ -38,6 +39,7 @@ export class GameScene extends Phaser.Scene {
         '9  →  +R$ 100',
         '0  →  resetar personagem e inventário',
         'T  →  +5 em todos os status',
+        'X  →  apagar jogo salvo e recomeçar',
       ].join('\n'), {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '18px',
@@ -58,6 +60,12 @@ export class GameScene extends Phaser.Scene {
     }
 
     // T: +5 em todos os status (FOR, DES, CON, INT, CAR, SOR).
+    // X: apaga o jogo salvo e recarrega do zero.
+    keys.on('keydown-X', () => {
+      deleteSave();
+      window.location.reload();
+    });
+
     keys.on('keydown-T', () =>
       player.changeAttributes({ for: 5, des: 5, con: 5, int: 5, car: 5, sor: 5 })
     );

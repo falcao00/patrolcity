@@ -96,6 +96,26 @@ export const inventory = {
     return null;
   },
 
+  // Persistência: guarda só os ids dos itens.
+  serialize() {
+    return {
+      items: items.map((item) => item.id),
+      equipped: { weapon: equipped.weapon?.id ?? null, armor: equipped.armor?.id ?? null },
+    };
+  },
+
+  // Restaura a partir dos ids, usando `catalog` (lista de todos os itens que existem).
+  restore(data, catalog) {
+    if (!data) return;
+    const byId = new Map(catalog.map((item) => [item.id, item]));
+    items = (data.items ?? []).map((id) => byId.get(id)).filter(Boolean).slice(0, INVENTORY_CAPACITY);
+    equipped = {
+      weapon: byId.get(data.equipped?.weapon) ?? null,
+      armor: byId.get(data.equipped?.armor) ?? null,
+    };
+    emit();
+  },
+
   clear() {
     items = [];
     equipped = { weapon: null, armor: null };

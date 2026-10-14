@@ -132,6 +132,29 @@ export const activities = {
     emit();
   },
 
+  // Persistência: a atividade em andamento (ou null).
+  serialize() {
+    if (!current) return null;
+    const { activity, durationMs, startedAt, endsAt } = current;
+    return { id: activity.id, durationMs, startedAt, endsAt };
+  },
+
+  // Retoma a atividade salva; se o tempo já acabou com o jogo fechado, conclui na hora.
+  restore(data) {
+    if (!data || current) return;
+    const activity = [...PATROLS, ...TRAININGS].find((a) => a.id === data.id);
+    if (!activity) return;
+
+    current = { activity, durationMs: data.durationMs, startedAt: data.startedAt, endsAt: data.endsAt };
+    const left = data.endsAt - Date.now();
+    if (left <= 0) {
+      finish();
+    } else {
+      timer = setTimeout(finish, left);
+      emit();
+    }
+  },
+
   // Conclui na hora a atividade em andamento (atalho de teste).
   completeNow() {
     if (current) finish();

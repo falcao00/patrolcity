@@ -55,6 +55,22 @@ export const hospital = {
     return null;
   },
 
+  // Persistência: a internação (ou null).
+  serialize: () => (stay ? { ...stay } : null),
+
+  // Retoma a internação salva; se as 8 horas já passaram, dá alta. Chamar antes de init().
+  restore(data) {
+    if (!data || stay || typeof data.endsAt !== 'number') return;
+    const left = data.endsAt - Date.now();
+    if (left <= 0) {
+      player.setHp(100);
+      return;
+    }
+    stay = { startedAt: data.startedAt, endsAt: data.endsAt };
+    timer = setTimeout(() => discharge(), left);
+    emit();
+  },
+
   // Alta imediata (atalho de teste).
   dischargeNow() {
     if (stay) discharge();

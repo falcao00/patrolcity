@@ -9,9 +9,13 @@ import { InventoryScene } from './scenes/InventoryScene.js';
 import { initSidebar } from './hud/sidebar.js';
 import { initTopMenu } from './hud/topMenu.js';
 import { hospital } from './state/hospital.js';
+import { loadGame, startAutoSave } from './state/save.js';
 
-initSidebar();
+// Restaura o jogo salvo antes de tudo (o hospital precisa saber se já havia internação).
+loadGame();
 hospital.init();
+startAutoSave();
+initSidebar();
 
 function startGame() {
   const game = new Phaser.Game({

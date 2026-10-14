@@ -86,4 +86,29 @@ export const player = {
     emit();
   },
   setPhoto(dataUrl) { state.photo = dataUrl; emit(); },
+
+  // Persistência: dados a salvar (a foto é salva à parte, em save.js).
+  serialize() {
+    const { photo, ...data } = snapshot();
+    return data;
+  },
+
+  // Restaura dados salvos, ignorando campos ausentes ou inválidos.
+  restore(data) {
+    if (!data) return;
+    const num = (v) => typeof v === 'number' && Number.isFinite(v);
+    if (typeof data.name === 'string') state.name = data.name;
+    if (num(data.level) && data.level >= 1) state.level = Math.floor(data.level);
+    state.xpToNext = xpToNextLevel(state.level);
+    if (num(data.xp)) state.xp = Math.max(0, Math.min(state.xpToNext - 1, Math.round(data.xp)));
+    if (num(data.hp)) state.hp = clamp(data.hp);
+    if (num(data.energy)) state.energy = clamp(data.energy);
+    if (num(data.reputation)) state.reputation = Math.round(data.reputation);
+    if (num(data.money)) state.money = Math.max(0, Math.round(data.money));
+    for (const key of Object.keys(state.attributes)) {
+      const value = data.attributes?.[key];
+      if (num(value)) state.attributes[key] = Math.max(0, Math.round(value));
+    }
+    emit();
+  },
 };

@@ -10,6 +10,30 @@ const DEFAULT_AVATAR =
       '</svg>'
   );
 
+const PHOTO_MAX_SIZE = 256;
+
+// Reduz a foto para no máximo 256 px (JPEG) para caber no jogo salvo do navegador.
+function shrinkPhoto(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, PHOTO_MAX_SIZE / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL('image/jpeg', 0.85));
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Imagem inválida'));
+    };
+    img.src = url;
+  });
+}
+
 export function initSidebar() {
   const $ = (id) => document.getElementById(id);
   const avatarImg = $('avatar-img');
@@ -19,9 +43,9 @@ export function initSidebar() {
     const file = avatarInput.files?.[0];
     if (!file || !file.type.startsWith('image/')) return;
 
-    const reader = new FileReader();
-    reader.onload = () => player.setPhoto(reader.result);
-    reader.readAsDataURL(file);
+    shrinkPhoto(file)
+      .then((dataUrl) => player.setPhoto(dataUrl))
+      .catch((err) => console.warn('Não foi possível carregar a foto:', err));
     avatarInput.value = '';
   });
 
